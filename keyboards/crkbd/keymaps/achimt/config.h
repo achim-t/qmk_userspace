@@ -1,115 +1,61 @@
 /*
-Copyright 2019 @foostan
-Copyright 2023 @asdfire1
+This is the C configuration file for the keymap
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
+  Copyright 2022 Mark Stosberg (@markstos)
+  SPDX-License-Identifier: GPL-2.0-or-later
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
 
+//#define USE_MATRIX_I2C
+
 /* Select hand configuration */
 
-#define MASTER_LEFT
-// #define MASTER_RIGHT
+// #define MASTER_LEFT
+#define MASTER_RIGHT
 // #define EE_HANDS
 
-#ifdef RGBLIGHT_ENABLE
-    #define RGBLIGHT_EFFECT_BREATHING
-    #define RGBLIGHT_EFFECT_RAINBOW_MOOD
-    #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-    #define RGBLIGHT_EFFECT_SNAKE
-    #define RGBLIGHT_EFFECT_KNIGHT
-    #define RGBLIGHT_EFFECT_CHRISTMAS
-    #define RGBLIGHT_EFFECT_STATIC_GRADIENT
-//  #define RGBLIGHT_EFFECT_RGB_TEST
-//  #define RGBLIGHT_EFFECT_ALTERNATING
-//  #define RGBLIGHT_EFFECT_TWINKLE
-    #define RGBLIGHT_LIMIT_VAL 120
-    #define RGBLIGHT_HUE_STEP 10
-    #define RGBLIGHT_SAT_STEP 17
-    #define RGBLIGHT_VAL_STEP 17
-#endif
+//#define SSD1306OLED
 
-#ifdef RGB_MATRIX_ENABLE
-//#   define RGB_MATRIX_KEYPRESSES // reacts to keypresses
-// #   define RGB_MATRIX_KEYRELEASES // reacts to keyreleases (instead of keypresses)
-// #   define RGB_DISABLE_AFTER_TIMEOUT 0 // number of ticks to wait until disabling effects
-#   define RGB_DISABLE_WHEN_USB_SUSPENDED // turn off effects when suspended
-//#   define RGB_MATRIX_FRAMEBUFFER_EFFECTS
-// #   define RGB_MATRIX_LED_PROCESS_LIMIT (DRIVER_LED_TOTAL + 4) / 5 // limits the number of LEDs to process in an animation per task run (increases keyboard responsiveness)
-// #   define RGB_MATRIX_LED_FLUSH_LIMIT 16 // limits in milliseconds how frequently an animation will update the LEDs. 16 (16ms) is equivalent to limiting to 60fps (increases keyboard responsiveness)
-#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 150 // limits maximum brightness of LEDs to 150 out of 255. Higher may cause the controller to crash. 
-#    define RGB_MATRIX_HUE_STEP 8
-#    define RGB_MATRIX_SAT_STEP 8
-#    define RGB_MATRIX_VAL_STEP 8
-#    define RGB_MATRIX_SPD_STEP 10
 
-/* Enable the animations you want/need.  You may need to enable only a small number of these because       *
- * they take up a lot of space.  Enable and confirm that you can still successfully compile your firmware. */
-// RGB Matrix Animation modes. Explicitly enabled
-// For full list of effects, see:
-// https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects
-#    define ENABLE_RGB_MATRIX_ALPHAS_MODS
-//#    define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
-//#    define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
-//#    define ENABLE_RGB_MATRIX_BREATHING
-//#    define ENABLE_RGB_MATRIX_BAND_SAT
-//#    define ENABLE_RGB_MATRIX_BAND_VAL
-//#    define ENABLE_RGB_MATRIX_BAND_PINWHEEL_SAT
-//#    define ENABLE_RGB_MATRIX_BAND_PINWHEEL_VAL
-//#    define ENABLE_RGB_MATRIX_BAND_SPIRAL_SAT
-//#    define ENABLE_RGB_MATRIX_BAND_SPIRAL_VAL
-//#    define ENABLE_RGB_MATRIX_CYCLE_ALL
-//#    define ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
-#    define ENABLE_RGB_MATRIX_CYCLE_UP_DOWN
-//#    define ENABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
-//#    define ENABLE_RGB_MATRIX_CYCLE_OUT_IN
-//#    define ENABLE_RGB_MATRIX_CYCLE_OUT_IN_DUAL
-//#    define ENABLE_RGB_MATRIX_CYCLE_PINWHEEL
-//#    define ENABLE_RGB_MATRIX_CYCLE_SPIRAL
-//#    define ENABLE_RGB_MATRIX_DUAL_BEACON
-//#    define ENABLE_RGB_MATRIX_RAINBOW_BEACON
-//#    define ENABLE_RGB_MATRIX_RAINBOW_PINWHEELS
-//#    define ENABLE_RGB_MATRIX_RAINDROPS
-//#    define ENABLE_RGB_MATRIX_JELLYBEAN_RAINDROPS
-//#    define ENABLE_RGB_MATRIX_HUE_BREATHING
-//#    define ENABLE_RGB_MATRIX_HUE_PENDULUM
-//#    define ENABLE_RGB_MATRIX_HUE_WAVE
-//#    define ENABLE_RGB_MATRIX_PIXEL_RAIN
-//#    define ENABLE_RGB_MATRIX_PIXEL_FLOW
-//#    define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
-// enabled only if RGB_MATRIX_FRAMEBUFFER_EFFECTS is defined
-//#    define ENABLE_RGB_MATRIX_TYPING_HEATMAP
-//#    define ENABLE_RGB_MATRIX_DIGITAL_RAIN
-// enabled only of RGB_MATRIX_KEYPRESSES or RGB_MATRIX_KEYRELEASES is defined
-//#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
-//#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE
-//#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
-//#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
-//#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
-//#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
-//#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
-//#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
-//#    define ENABLE_RGB_MATRIX_SPLASH
-//#    define ENABLE_RGB_MATRIX_MULTISPLASH
-//#    define ENABLE_RGB_MATRIX_SOLID_SPLASH
-//#    define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
-#endif
-#define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
-#define SPLIT_LAYER_STATE_ENABLE
-#define SPLIT_WPM_ENABLE //Enable WPM across split keyboards (+268).
-#define NO_ACTION_ONESHOT
-//#define SPLIT_OLED_ENABLE
+// By default, when holding a dual-function key shortly after tapping it, the
+// tapped key will begin repeating. This is handy for fast typists when typing
+// words with double letters, such as "happy". If you turn this setting ON, it
+// will be counted as a held modifier instead.
+//#define TAPPING_FORCE_HOLD
 
-#define DYNAMIC_KEYMAP_LAYER_COUNT 6
+// Customized by markstos
+#define TAPPING_TERM 200
+#define TAPPING_TERM_PER_KEY
+// used for Tapping Term on thumb keys
+#define TAPPING_TERM_THUMB 125
+
+// If you press a dual-role key, press another key, and then release the
+// dual-role key, all within the tapping term, by default the dual-role key
+// will perform its tap action. If the HOLD_ON_OTHER_KEY_PRESS option is
+// enabled, the dual-role key will perform its hold action instead.
+#define HOLD_ON_OTHER_KEY_PRESS
+
+// markstos: not sure if these are correct
+// They are intended to beep and flash during flashing
+#define QMK_LED     D5
+#define QMK_SPEAKER C6
+
+// Prevent normal rollover on alphas from accidentally triggering mods.
+#define IGNORE_MOD_TAP_INTERRUPT
+
+// When enabled, typing a mod-tap plus second within term will register as the mod-combo
+// Ref: https://beta.docs.qmk.fm/using-qmk/software-features/tap_hold#permissive-hold 
+#define PERMISSIVE_HOLD
+
+#define COMBO_COUNT 2 
+
+// Set the COMBO_TERM so low that I won't type the keys one after each other during normal typing.
+// They would have be held together intentionally to trigger this.
+#define COMBO_TERM 40
+
+// These mostly affect my one-shot Shift key, providing a CapsLock alternative.
+// I want a relatively low timeout, so if I accidentally type "Shift", I can pause just briefly and move on.
+#define ONESHOT_TAP_TOGGLE 3  /* Tapping this number of times holds the key until tapped once again. */
+#define ONESHOT_TIMEOUT 2000  /* Time (in ms) before the one shot key is released */
