@@ -33,7 +33,7 @@ combo_t key_combos[COMBO_COUNT] = {
 enum custom_layers {
   _QWERTY,
   _LOWER,
-  _RAISE,
+  _NAV,
   _FUNC,
 };
 
@@ -43,11 +43,11 @@ enum custom_layers {
 #define OSL_FUN  OSL(_FUNC)
 #define GUI_ENT  GUI_T(KC_ENT)
 #define LOW_TAB  LT(_LOWER, KC_TAB)
-#define RSE_BSP  LT(_RAISE, KC_BSPC)
+#define RSE_BSP  LT(_NAV, KC_BSPC)
 #define OSM_SFT  OSM(MOD_LSFT) 
 
 
-// For _RAISE layer
+// For _NAV layer
 #define CTL_ESC  LCTL_T(KC_ESC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -55,11 +55,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
 OSM(MOD_LALT),    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, DE_UDIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      OSM_SFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, DE_ODIA, DE_ADIA,
+      OSM_SFT,LGUI_T(KC_A),LALT_T(KC_S),LCTL_T(KC_D),LSFT_T(KC_F),KC_G,             KC_H,LSFT_T(KC_J),LCTL_T(KC_K),LALT_T(KC_L),LGUI_T(KC_QUOT), DE_ADIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
      OSM_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,   DE_SS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         KC_ESC, KC_SPC, LT(_LOWER, KC_TAB),    LT(_RAISE, KC_ENT),  KC_BSPC,  KC_DEL
+                                KC_ESC, KC_SPC, LT(_NAV, KC_TAB),    LT(_LOWER, KC_ENT),  KC_BSPC,  KC_DEL
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -76,15 +76,15 @@ OSM(MOD_LALT),    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     
     ),
 
 
-  [_RAISE] = LAYOUT_split_3x6_3(
+  [_NAV] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, KC_DEL , XXXXXXX, KC_UNDS, KC_PLUS, KC_PGUP,                      XXXXXXX, KC_HOME,   KC_UP,  KC_END, KC_PGUP, _______,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       KC_INS, KC_HOME,   KC_UP,  KC_END, KC_PGUP, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_HOME, KC_END , KC_MINS, KC_EQL , KC_PGDN,                      KC_LEFT, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, _______,
+      XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,                      KC_CAPS, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_LT  , KC_GT  , KC_COPY, KC_PSTE, KC_SCLN,                      C(KC_Y), C(KC_V), C(KC_C), C(KC_X), C(KC_Z), _______,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      C(KC_Y), C(KC_V), C(KC_C), C(KC_X), C(KC_Z), XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          CTL_ESC, KC_TRNS, XXXXXXX,      RAISE, KC_TRNS, KC_TRNS\
+                                          XXXXXXX, XXXXXXX, XXXXXXX,      KC_ENT, KC_BSPC, KC_DEL\
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -103,7 +103,7 @@ OSM(MOD_LALT),    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-      case LT(_RAISE, KC_BSPC):
+      case LT(_NAV, KC_BSPC):
             return TAPPING_TERM_THUMB;
       case LT(_LOWER, KC_TAB):
             return TAPPING_TERM_THUMB;
