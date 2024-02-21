@@ -10,5 +10,5 @@ COMBO_ENABLE = yes
 # https://github.com/qmk/qmk_firmware/blob/master/docs/feature_rgblight.md
 RGBLIGHT_ENABLE = no
 
-VIA_ENABLE      = yes    # Enable VIA
+#VIA_ENABLE      = yes    # Enable VIA
 OLED_ENABLE     = yes
