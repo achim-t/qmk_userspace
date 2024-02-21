@@ -61,3 +61,5 @@ This is the C configuration file for the keymap
 #define ONESHOT_TAP_TOGGLE 3  /* Tapping this number of times holds the key until tapped once again. */
 #define ONESHOT_TIMEOUT 2000  /* Time (in ms) before the one shot key is released */
 #define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
+#define NO_AUTO_SHIFT_SPECIAL
+#define NO_AUTO_SHIFT_NUMERIC 
