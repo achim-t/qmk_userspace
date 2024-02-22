@@ -9,6 +9,7 @@ COMBO_ENABLE = yes
 # This is for RGB *underglow*
 # https://github.com/qmk/qmk_firmware/blob/master/docs/feature_rgblight.md
 RGBLIGHT_ENABLE = no
+RGB_MATRIX_ENABLE = yes
 
 #VIA_ENABLE      = yes    # Enable VIA
 OLED_ENABLE     = yes
