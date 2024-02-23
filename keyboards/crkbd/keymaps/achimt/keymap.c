@@ -36,6 +36,18 @@ enum custom_layers {
 // For _NAV layer
 #define CTL_ESC  LCTL_T(KC_ESC)
 
+#ifdef RGB_MATRIX_ENABLE
+    #define ___off___	{0,0,0}
+    #define MG__WHITE	{255,255,255}
+    #define	MG____RED	{255,0,0}
+    #define MG__GREEN	{32,159,33}
+    #define MG___BLUE	{0,181,213}
+    #define MG_YELLOW	{255,208,0}
+    #define MG_ORANGE	{255,85,0}
+    #define MG___PINK	{208,0,255}
+    #define MG_PURPLE	{50,0,232}
+#endif
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -43,7 +55,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        KC_TAB,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, DE_ODIA, DE_ADIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    DE_Y,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,   DE_SS,
+      KC_LSFT,    DE_Y,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, DE_MINS,   DE_SS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                          MO(_NUM),MO(_NAV),  KC_SPC,     KC_ENT,MO(_SYM),MO(_FUNC)
                                       //`--------------------------'  `--------------------------'
@@ -97,7 +109,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_SUDOKU] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-  TG(_SUDOKU), XXXXXXX,    KC_7,    KC_8,    KC_9, XXXXXXX,                      XXXXXXX, XXXXXXX,   KC_UP, XXXXXXX, XXXXXXX, XXXXXXX,
+  TG(_SUDOKU), C(KC_A),    KC_7,    KC_8,    KC_9, XXXXXXX,                      XXXXXXX, XXXXXXX,   KC_UP, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX, XXXXXXX,    KC_4,    KC_5,    KC_6, XXXXXXX,                      XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -134,6 +146,9 @@ bool get_custom_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
         case DE_ODIA:
         case DE_UDIA:
         case DE_ADIA:
+        case DE_MINS:
+        case DE_DOT:
+        case DE_COMM:
             return true;
         default:
             return false;
@@ -204,26 +219,109 @@ bool oled_task_user(void) {
 }
 #endif // OLED_ENABLE
 
+#ifdef RGB_MATRIX_ENABLE
+
+const uint8_t PROGMEM ledmap[][42][3] = {
+/* Starts at layer 1; we don't apply lights to Base (layer 0). */
+[_NAV] = {
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+								 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+			},
+[_NUM] = {
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+			},
+[_FUNC] = {
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+			},
+[_SYM] = {
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+			},
+[_SUDOKU] = {
+___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, ___off___, MG__WHITE, ___off___, ___off___, ___off___,
+___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, MG__WHITE, MG__WHITE, MG__WHITE, ___off___, ___off___,
+___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+			},
+};
+
+extern bool g_suspend_state;
+extern rgb_config_t rgb_matrix_config;
+
+void keyboard_post_init_user(void) {
+    rgb_matrix_enable();
+    rgb_matrix_sethsv_noeeprom(0, 0, 0); // (180, 255, 231) is purple
+    rgb_matrix_mode_noeeprom(1);
+}
+
+// ====================================================
+// RGB matrix
+// ====================================================
+
+uint8_t ledIndexForKeymapIndex(uint8_t keyIndex) {
+	// Turn keyIndex into a row and column within g_led_config.
+	// Reference: https://github.com/qmk/qmk_firmware/blob/master/keyboards/crkbd/r2g/r2g.c
+	uint8_t row = 0;
+	uint8_t col = 0;
+	uint8_t keysPerRow = 12; // Specific to crkdb!
+	uint8_t keysPerHalf = keysPerRow / 2; // Assumes equal split!
+
+	row = keyIndex / keysPerRow;
+	col = keyIndex % keysPerRow;
+	if (row == 3) { // Specific to crkbd!
+		col += 3; // Compensate for leading three NO_LED entries in g_led_config.
+	}
+
+	bool mirror = (col >= keysPerHalf);
+	if (mirror) {
+		// Normalise row and col per g_led_config structure.
+		row += 4;
+		col -= keysPerHalf;
+		// Mirror column position.
+		col = (keysPerHalf - 1) - col;
+	}
+
+	return g_led_config.matrix_co[row][col];
+}
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
+    uint8_t layerNum = get_highest_layer(layer_state);
+    if (layerNum == 0) {
         rgb_matrix_set_color_all(0, 0, 0);
-    // // Get the current time
-    // uint32_t now = timer_read();
+        return false;
+    }
 
-    //     // Turn off all LEDs
+    // Per-key indicators
+    uint8_t ledIndex = 0;
+    uint8_t r, g, b;
+    for (uint8_t keyIndex = 0; keyIndex < 42; keyIndex++) { // 0 to 42
+        ledIndex = ledIndexForKeymapIndex(keyIndex);
 
-    //     // Turn on the current LED
-    //     rgb_matrix_set_color(current_led, 0, 0, 255);
-    // // Check if it's been at least 1000 milliseconds since the last update
-    // if (now - last_update_time >= 1000) {
+        if (ledIndex >= led_min && ledIndex <= led_max) {
+            r = pgm_read_byte(&ledmap[layerNum][keyIndex][0]);
+            g = pgm_read_byte(&ledmap[layerNum][keyIndex][1]);
+            b = pgm_read_byte(&ledmap[layerNum][keyIndex][2]);
 
-    //     // Update the time of the last update
-    //     last_update_time = now;
-
-    //     // Move to the next LED, wrapping around if necessary
-    //     current_led = (current_led + 1);
-    // }
+            if (!r && !g && !b) {
+                RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, 0, 0, 0);
+            } else {
+                RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, r, g, b);
+            }
+        }
+    }
 
     return false;
 }
+
+#endif
