@@ -1,5 +1,5 @@
 # markstos: enable media keys
-EXTRAKEY_ENABLE = yes
+# EXTRAKEY_ENABLE = yes
 
 # markstos: smaller file size, little down-side
 LTO_ENABLE = yes
@@ -15,3 +15,4 @@ RGB_MATRIX_ENABLE = yes
 OLED_ENABLE     = yes
 CAPS_WORD_ENABLE = yes
 AUTO_SHIFT_ENABLE = yes
+REPEAT_KEY_ENABLE = yes

@@ -11,20 +11,6 @@ enum custom_keycodes {
   BACKLIT
 };
 
-enum combos {
-  DF_DASH,
-  JK_ESC
-};
-
-const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
-const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
-
-combo_t key_combos[COMBO_COUNT] = {
-  // Add commonly used dash to home row
-  [DF_DASH]    = COMBO(df_combo, KC_MINS),
-  // For Vim, put Escape on the home row
-  [JK_ESC]    = COMBO(jk_combo, KC_ESC),
-};
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
@@ -46,7 +32,7 @@ enum custom_layers {
 #define OSM_ALT  OSM(MOD_LALT) 
 #define OSM_GUI  OSM(MOD_LGUI) 
 
-//TODO Normales Ctrl + Alt für Maus
+//ctrl-a in sudoku layersd
 // For _NAV layer
 #define CTL_ESC  LCTL_T(KC_ESC)
 
@@ -81,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, OSM_ALT, OSM_GUI, OSM_SFT, OSM_CTL, OSM_AGR,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT,  KC_DEL, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, C(DE_Z), C(KC_X), C(KC_C), KC_LGUI, C(KC_V),                       KC_ENT, KC_BSPC,  KC_TAB,  KC_APP, KC_PSCR, XXXXXXX,
+      _______, C(DE_Z), C(KC_X), C(KC_C), KC_LGUI, C(KC_V),                       QK_REP, KC_BSPC,  KC_TAB,  KC_APP, KC_PSCR, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX,XXXXXXX\
                                       //`--------------------------'  `--------------------------'
@@ -89,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_FUNC] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_F12,    KC_F7,   KC_F8,   KC_F9, KC_PSCR, XXXXXXX,
+      AS_TOGG,  AS_UP,  AS_DOWN,  AS_RPT, XXXXXXX, XXXXXXX,                      KC_F12,    KC_F7,   KC_F8,   KC_F9, KC_PSCR, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+ -------|--------|
       _______, OSM_ALT, OSM_GUI, OSM_SFT, OSM_CTL, OSM_AGR,                      KC_F11,    KC_F4,   KC_F5,   KC_F6, KC_SCRL, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+ -------|--------|
@@ -140,6 +126,17 @@ bool caps_word_press_user(uint16_t keycode) {
 
         default:
             return false;  // Deactivate Caps Word.
+    }
+}
+
+bool get_custom_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
+    switch(keycode) {
+        case DE_ODIA:
+        case DE_UDIA:
+        case DE_ADIA:
+            return true;
+        default:
+            return false;
     }
 }
     // static uint8_t current_led = 0;
