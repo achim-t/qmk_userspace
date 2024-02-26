@@ -116,3 +116,4 @@ This is the C configuration file for the keymap
 #undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #define TAP_CODE_DELAY 50
 #define SPLIT_LAYER_STATE_ENABLE
+#define DOUBLE_REPORT 

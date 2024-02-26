@@ -149,6 +149,7 @@ bool get_custom_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
         case DE_MINS:
         case DE_DOT:
         case DE_COMM:
+        case DE_HASH:
             return true;
         default:
             return false;
