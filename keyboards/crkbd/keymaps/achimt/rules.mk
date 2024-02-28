@@ -14,7 +14,7 @@ RGB_MATRIX_ENABLE = no
 #VIA_ENABLE      = yes    # Enable VIA
 OLED_ENABLE     = yes
 CAPS_WORD_ENABLE = yes
-AUTO_SHIFT_ENABLE = yes
+AUTO_SHIFT_ENABLE = no
 REPEAT_KEY_ENABLE = yes
 
 SRC += flow.c
