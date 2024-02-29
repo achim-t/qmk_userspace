@@ -2,15 +2,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
 #include "keymap_german.h"
-#include "flow.h"
+#include "features/flow.h"
+#include "features/layer_lock.h"
 
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  LOWER,
-  RAISE,
-  FUNC,
-  BACKLIT,
-  OS_FUNC,
+  OS_FUNC = SAFE_RANGE,
+  LLOCK,
 };
 
 
@@ -34,7 +31,6 @@ enum custom_layers {
 #define OSM_ALT  OSM(MOD_LALT) 
 #define OSM_GUI  OSM(MOD_LGUI) 
 
-//ctrl-a in sudoku layersd
 // For _NAV layer
 #define CTL_ESC  LCTL_T(KC_ESC)
 
@@ -59,14 +55,8 @@ const uint16_t flow_config[FLOW_COUNT][2] = {
 };
 
 const uint16_t flow_layers_config[FLOW_LAYERS_COUNT][2] = {
-{OS_FUNC, _FUNC},
+    {OS_FUNC, _FUNC},
 };
-
-// const uint16_t flow_layers_config[FLOW_LAYERS_COUNT][2] = {
-//     {OS_MISC, _MISC},
-//     {OS_TMUX, _TMUX},
-//     {OS_FUNC, _FUNC},
-// };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_split_3x6_3(
@@ -83,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_SYM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),                      S(KC_6), S(KC_7), S(KC_8), S(KC_9), S(KC_0), DE_ACUT,
+        LLOCK, S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),                      S(KC_6), S(KC_7), S(KC_8), S(KC_9), S(KC_0), DE_ACUT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_LALT, KC_LGUI, KC_LSFT, KC_LCTL, KC_RALT,                      DE_LABK, DE_LPRN, DE_LCBR, DE_LBRC, DE_PLUS, DE_HASH,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -95,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAV] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX,  KC_ESC,A(KC_LEFT),C(KC_F),A(KC_RGHT),KC_INS,                      QK_REP, KC_HOME,   KC_UP,  KC_END, KC_PGUP, XXXXXXX,
+        LLOCK,  KC_ESC,A(KC_LEFT),C(KC_F),A(KC_RGHT),KC_INS,                      QK_REP, KC_HOME,   KC_UP,  KC_END, KC_PGUP, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_LALT, KC_LGUI, KC_LSFT, KC_LCTL, KC_RALT,                      XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -107,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_FUNC] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_F12,    KC_F7,   KC_F8,   KC_F9, KC_PSCR, XXXXXXX,
+        LLOCK, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_F12,    KC_F7,   KC_F8,   KC_F9, KC_PSCR, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+ -------|--------|
       _______, KC_LALT, KC_LGUI, KC_LSFT, KC_LCTL, KC_RALT,                      KC_F11,    KC_F4,   KC_F5,   KC_F6, KC_SCRL, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+ -------|--------|
@@ -118,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_NUM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX,    KC_7,    KC_8,    KC_9, DE_SLSH, DE_ASTR,
+        LLOCK, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX,    KC_7,    KC_8,    KC_9, DE_SLSH, DE_ASTR,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_LALT, KC_LGUI, KC_LSFT, KC_LCTL, KC_RALT,                      XXXXXXX,    KC_4,    KC_5,    KC_6, DE_MINS, DE_PLUS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -334,7 +324,8 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 #endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!update_flow(keycode, record->event.pressed, record->event.key)) return false;
+    if (!update_flow(keycode, record->event.pressed, record->event.key)) return false; 
+    if (!process_layer_lock(keycode, record, LLOCK)) { return false; }
     return true;
 }
 
