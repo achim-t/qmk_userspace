@@ -40,8 +40,8 @@ This is the C configuration file for the keymap
 
 // markstos: not sure if these are correct
 // They are intended to beep and flash during flashing
-#define QMK_LED     D5
-#define QMK_SPEAKER C6
+// #define QMK_LED     D5
+// #define QMK_SPEAKER C6
 
 // Prevent normal rollover on alphas from accidentally triggering mods.
 //#define IGNORE_MOD_TAP_INTERRUPT
@@ -55,8 +55,8 @@ This is the C configuration file for the keymap
 #define ONESHOT_TAP_TOGGLE 3  /* Tapping this number of times holds the key until tapped once again. */
 #define ONESHOT_TIMEOUT 2000  /* Time (in ms) before the one shot key is released */
 #define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
-#define NO_AUTO_SHIFT_SPECIAL
-#define NO_AUTO_SHIFT_NUMERIC 
+//#define NO_AUTO_SHIFT_SPECIAL
+//#define NO_AUTO_SHIFT_NUMERIC 
 
 #undef RGBLIGHT_ANIMATIONS
 #undef RGBLIGHT_EFFECT_BREATHING
@@ -114,6 +114,8 @@ This is the C configuration file for the keymap
 #undef ENABLE_RGB_MATRIX_MULTISPLASH
 #undef ENABLE_RGB_MATRIX_SOLID_SPLASH
 #undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
-#define TAP_CODE_DELAY 50
+//#define TAP_CODE_DELAY 50
 #define SPLIT_LAYER_STATE_ENABLE
-#define DOUBLE_REPORT 
+//#define DOUBLE_REPORT 
+#define FLOW_COUNT 5
+#define FLOW_LAYERS_COUNT 1
