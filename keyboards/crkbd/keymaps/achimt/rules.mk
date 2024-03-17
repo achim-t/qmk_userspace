@@ -16,6 +16,7 @@ OLED_ENABLE     = yes
 CAPS_WORD_ENABLE = yes
 AUTO_SHIFT_ENABLE = no
 REPEAT_KEY_ENABLE = yes
+KEY_LOCK_ENABLE = yes
 
 SRC += features/flow.c 
 SRC += features/layer_lock.c
