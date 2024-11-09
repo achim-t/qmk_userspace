@@ -18,6 +18,7 @@ enum custom_keycodes {
 enum custom_layers {
   _QWERTY,
   _COLEMAK,
+  _GAMING,
   _SYM,
   _NAV,
   _FUNC,
@@ -83,6 +84,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       //`--------------------------'  `--------------------------'
   ),
 
+  [_GAMING] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_C,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+       KC_TAB,   KC_F1,   KC_F2,   KC_F3,   KC_F4,    KC_T,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+         KC_Q,   KC_F5,   KC_F6,   KC_F7,   KC_F8,    KC_I,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_LCTL, KC_LALT, KC_LSFT,    KC_SPC,MO(_SYM),MO(_FUNC)
+                                      //`--------------------------'  `--------------------------'
+    ),
   [_SYM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
         LLOCK, S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),                      S(KC_6), S(KC_7), S(KC_8), S(KC_9), S(KC_0), DE_ACUT,
@@ -97,9 +109,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAV] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-        LLOCK,  KC_ESC,A(KC_LEFT),C(KC_F),A(KC_RGHT),KC_INS,                      QK_REP, KC_HOME,   KC_UP,  KC_END, KC_PGUP, XXXXXXX,
+        LLOCK,  KC_ESC,A(KC_LEFT),C(KC_F),A(KC_RGHT),C(KC_D),                      QK_REP, KC_HOME,   KC_UP,  KC_END, KC_PGUP, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      QK_LOCK, KC_LALT, KC_LGUI, KC_LSFT, KC_LCTL, KC_RALT,                      XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, XXXXXXX,
+      _______, KC_LALT, KC_LGUI, KC_LSFT, KC_LCTL, KC_RALT,                       KC_INS, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, C(DE_Z), C(KC_X), C(KC_C), C(KC_V), C(DE_Y),                       KC_DEL, KC_BSPC,  KC_TAB,  KC_APP, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -113,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+ -------|--------|
       _______, KC_LALT, KC_LGUI, KC_LSFT, KC_LCTL, KC_RALT,                      KC_F11,    KC_F4,   KC_F5,   KC_F6, KC_SCRL, DF(_QWERTY),
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+ -------|--------|
-      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_F10,    KC_F1,   KC_F2,   KC_F3, KC_PAUS, TG(_SUDOKU),
+      DF(_GAMING), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_F10,    KC_F1,   KC_F2,   KC_F3, KC_PAUS, TG(_SUDOKU),
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX
                                       //`--------------------------'  `--------------------------'
@@ -191,6 +203,9 @@ void oled_render_layer_state(void) {
         case _SYM:
             oled_write_ln_P(PSTR("Symbol"), false);
             break;
+        case _GAMING:
+            oled_write_ln_P(PSTR("Gaming"), false);
+            break;
         case _NAV:
             oled_write_ln_P(PSTR("Navigation"), false);
             break;
@@ -212,12 +227,12 @@ void render_mod_status(uint8_t modifiers) {
     oled_write_P(PSTR(" "), false);
     oled_write_P(PSTR("G"), (modifiers & MOD_MASK_GUI));
 }
-
-// void render_led_number(void){
-//   oled_write_ln_P(PSTR(""), false);
-//   oled_write_P(PSTR("LED: "), false);
-//   oled_write_P(PSTR(current_led + 1), false);
-// }
+    static uint8_t current_led = 0;
+void render_led_number(void){
+  oled_write_ln_P(PSTR(""), false);
+  oled_write_P(PSTR("LED: "), false);
+  oled_write(get_u8_str(current_led, '0'), false);
+}
 
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
@@ -225,7 +240,7 @@ bool oled_task_user(void) {
         render_mod_status(get_mods());
         // render_led_number();
     } else {
-        
+        render_led_number();
     }
     return false;
 }
@@ -233,39 +248,39 @@ bool oled_task_user(void) {
 
 #ifdef RGB_MATRIX_ENABLE
 
-const uint8_t PROGMEM ledmap[][42][3] = {
-/* Starts at layer 1; we don't apply lights to Base (layer 0). */
-[_NAV] = {
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-								 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-			},
-[_NUM] = {
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-			},
-[_FUNC] = {
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-			},
-[_SYM] = {
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-			},
-[_SUDOKU] = {
-___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, ___off___, MG__WHITE, ___off___, ___off___, ___off___,
-___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, MG__WHITE, MG__WHITE, MG__WHITE, ___off___, ___off___,
-___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-			},
-};
+// const uint8_t PROGMEM ledmap[][42][3] = {
+// /* Starts at layer 1; we don't apply lights to Base (layer 0). */
+// [_NAV] = {
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// 								 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+// 			},
+// [_NUM] = {
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// 						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+// 			},
+// [_FUNC] = {
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// 						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+// 			},
+// [_SYM] = {
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// 						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+// 			},
+// [_SUDOKU] = {
+// ___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, ___off___, MG__WHITE, ___off___, ___off___, ___off___,
+// ___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, MG__WHITE, MG__WHITE, MG__WHITE, ___off___, ___off___,
+// ___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
+// 						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
+// 			},
+// };
 
 extern bool g_suspend_state;
 extern rgb_config_t rgb_matrix_config;
@@ -306,35 +321,67 @@ uint8_t ledIndexForKeymapIndex(uint8_t keyIndex) {
 	return g_led_config.matrix_co[row][col];
 }
 
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-
-    uint8_t layerNum = get_highest_layer(layer_state);
-    if (layerNum == 0) {
-        rgb_matrix_set_color_all(0, 0, 0);
-        return false;
-    }
-
-    // Per-key indicators
-    uint8_t ledIndex = 0;
-    uint8_t r, g, b;
-    for (uint8_t keyIndex = 0; keyIndex < 42; keyIndex++) { // 0 to 42
-        ledIndex = ledIndexForKeymapIndex(keyIndex);
-
-        if (ledIndex >= led_min && ledIndex <= led_max) {
-            r = pgm_read_byte(&ledmap[layerNum][keyIndex][0]);
-            g = pgm_read_byte(&ledmap[layerNum][keyIndex][1]);
-            b = pgm_read_byte(&ledmap[layerNum][keyIndex][2]);
-
-            if (!r && !g && !b) {
-                RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, 0, 0, 0);
-            } else {
-                RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, r, g, b);
-            }
+void my_set_led(uint8_t layer, uint8_t keyIndex, uint8_t led_min, uint8_t led_max) {
+        uint8_t ledIndex = ledIndexForKeymapIndex(keyIndex);
+    if (ledIndex >= led_min && ledIndex <= led_max) {
+        if (is_layer_locked(layer)) {
+            RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, 255, 0, 0);
+        } else {
+            RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, 0, 0, 0);
         }
     }
+}
+
+    // static uint32_t last_update_time = 0;
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+
+    // uint8_t layerNum = get_highest_layer(layer_state);
+    // if (layerNum == 0) {
+    //     rgb_matrix_set_color_all(0, 0, 0);
+    //     return false;
+    // }
+
+    // // Per-key indicators
+    // uint8_t ledIndex = 0;
+    // uint8_t r, g, b;
+    // for (uint8_t keyIndex = 0; keyIndex < 42; keyIndex++) { // 0 to 42
+    //     ledIndex = ledIndexForKeymapIndex(keyIndex);
+
+    //     if (ledIndex >= led_min && ledIndex <= led_max) {
+    //         r = pgm_read_byte(&ledmap[layerNum][keyIndex][0]);
+    //         g = pgm_read_byte(&ledmap[layerNum][keyIndex][1]);
+    //         b = pgm_read_byte(&ledmap[layerNum][keyIndex][2]);
+
+    //         if (!r && !g && !b) {
+    //             RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, 0, 0, 0);
+    //         } else {
+    //             RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, r, g, b);
+    //         }
+    //     }
+    // }
+    // my_set_led(_NUM, 41, led_min, led_max);
+
+    my_set_led(_NAV, 37, led_min, led_max);
+    if (is_layer_locked(_NUM)) {
+            RGB_MATRIX_INDICATOR_SET_COLOR(ledIndexForKeymapIndex(39), 255, 0, 0);
+        } else {
+            RGB_MATRIX_INDICATOR_SET_COLOR(ledIndexForKeymapIndex(39), 0, 0, 0);
+        }
+    // my_set_led(_SYM, 40, led_min, led_max);
+    // my_set_led(_NAV, 36, led_min, led_max);
+    // my_set_led(_FUNC, 41, led_min, led_max);
+
+    // uint32_t now = timer_read();
+    // RGB_MATRIX_INDICATOR_SET_COLOR(ledIndexForKeymapIndex(current_led), 0, 0, 0);
+    // if (now - last_update_time >= 1000) {
+    //     last_update_time = now;
+    //     current_led = (current_led + 1) % 42;
+    // }
+    // RGB_MATRIX_INDICATOR_SET_COLOR(ledIndexForKeymapIndex(current_led), 255, 0, 0);
 
     return false;
 }
+
 
 #endif
 
@@ -346,4 +393,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void matrix_scan_user(void) {
     flow_matrix_scan();
+}
+
+void layer_lock_set_user(layer_state_t locked_layers) {
+  // Do something like `set_led(is_layer_locked(NAV));`
 }
