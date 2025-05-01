@@ -12,3 +12,5 @@
 
 # VS-Code files
 .vscode/*
+
+.direnv

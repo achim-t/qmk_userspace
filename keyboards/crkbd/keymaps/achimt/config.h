@@ -26,7 +26,7 @@ This is the C configuration file for the keymap
 //#define TAPPING_FORCE_HOLD
 
 // Customized by markstos
-#define TAPPING_TERM 300
+// #define TAPPING_TERM 300
 #define QUICK_TAP_TERM 150
 //#define TAPPING_TERM_PER_KEY
 // used for Tapping Term on thumb keys
