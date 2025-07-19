@@ -61,7 +61,7 @@ const uint16_t flow_layers_config[FLOW_LAYERS_COUNT][2] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_split_3x6_3_ex2(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_1,KC_2,                       DE_Z,    KC_U,    KC_I,    KC_O,    KC_P, DE_UDIA,
+      XXXXXXX,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  CM_HELO,KC_2,                       DE_Z,    KC_U,    KC_I,    KC_O,    KC_P, DE_UDIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        KC_TAB,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_3, KC_4,                     KC_H,    KC_J,    KC_K,    KC_L, DE_ODIA, DE_ADIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -78,7 +78,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LALT,    DE_Z,    KC_X,    KC_C,    KC_D,    KC_V,                         KC_K,    KC_H, KC_COMM,  KC_DOT,   DE_SS, DE_MINS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         MO(_NUM),MO(_NAV), KC_LSFT,     KC_SPC,MO(_SYM),MO(_FUNC)
+                                         MO(_NUM),MO(_NAV), KC_LSFT,     KC_SPC,LT(_SYM,KC_BSPC),MO(_FUNC)
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -287,6 +287,9 @@ void keyboard_post_init_user(void) {
     rgb_matrix_enable();
     rgb_matrix_sethsv_noeeprom(0, 0, 0); // (180, 255, 231) is purple
     rgb_matrix_mode_noeeprom(1);
+    
+    // Set Colemak as default layer
+    set_single_persistent_default_layer(_COLEMAK);
 }
 
 // ====================================================
@@ -319,6 +322,58 @@ uint8_t ledIndexForKeymapIndex(uint8_t keyIndex) {
 	return g_led_config.matrix_co[row][col];
 }
 
+// Memoization cache for LED index lookup
+#define CACHE_SIZE 8
+static struct {
+    uint16_t keycode;
+    uint8_t layer;
+    uint8_t led_index;
+    bool valid;
+} led_cache[CACHE_SIZE];
+static uint8_t cache_next = 0;
+
+// Helper function to store result in cache
+static void cache_led_result(uint16_t keycode, uint8_t layer, uint8_t led_index) {
+    led_cache[cache_next].keycode = keycode;
+    led_cache[cache_next].layer = layer;
+    led_cache[cache_next].led_index = led_index;
+    led_cache[cache_next].valid = true;
+    cache_next = (cache_next + 1) % CACHE_SIZE;
+}
+
+// Find LED index for a specific keycode in the current layer (with memoization)
+uint8_t find_led_index_for_keycode(uint16_t keycode) {
+    uint8_t layer = get_highest_layer(layer_state | default_layer_state);
+    
+    // Check cache first
+    for (uint8_t i = 0; i < CACHE_SIZE; i++) {
+        if (led_cache[i].valid && 
+            led_cache[i].keycode == keycode && 
+            led_cache[i].layer == layer) {
+            return led_cache[i].led_index;
+        }
+    }
+    
+    // Not in cache, search through the keymap matrix
+    for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+        for (uint8_t col = 0; col < MATRIX_COLS; col++) {
+            if (pgm_read_word(&keymaps[layer][row][col]) == keycode) {
+                // Convert matrix position to keymap index
+                uint8_t keyIndex = row * 12 + col; // 12 = keysPerRow for crkbd
+                uint8_t led_index = ledIndexForKeymapIndex(keyIndex);
+                
+                // Cache and return result
+                cache_led_result(keycode, layer, led_index);
+                return led_index;
+            }
+        }
+    }
+    
+    // Not found - cache the negative result too
+    cache_led_result(keycode, layer, NO_LED);
+    return NO_LED;
+}
+
 void my_set_led(uint8_t layer, uint8_t keyIndex, uint8_t led_min, uint8_t led_max) {
         uint8_t ledIndex = ledIndexForKeymapIndex(keyIndex);
     if (ledIndex >= led_min && ledIndex <= led_max) {
@@ -329,54 +384,49 @@ void my_set_led(uint8_t layer, uint8_t keyIndex, uint8_t led_min, uint8_t led_ma
         }
     }
 }
+#        include "elpekenin/indicators.h"
+const indicator_t PROGMEM indicators[] = {
+    // LAYER_INDICATOR(_SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_1, _SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_2, _SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_3, _SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_4, _SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_5, _SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_6, _SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_7, _SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_8, _SUDOKU, RGB_RED),
+    KEYCODE_IN_LAYER_INDICATOR(KC_9, _SUDOKU, RGB_RED),
+    // LAYER_INDICATOR(_NAV, RGB_BLUE),
+    // KEYCODE_INDICATOR(KC_Q, RGB_GREEN)
+    // Dynamic indicators need to be handled in rgb_matrix_indicators_advanced_user
+ };
 
-    // static uint32_t last_update_time = 0;
+ // static uint32_t last_update_time = 0;
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-
-    // uint8_t layerNum = get_highest_layer(layer_state);
-    // if (layerNum == 0) {
-    //     rgb_matrix_set_color_all(0, 0, 0);
-    //     return false;
-    // }
-
-    // // Per-key indicators
-    // uint8_t ledIndex = 0;
-    // uint8_t r, g, b;
-    // for (uint8_t keyIndex = 0; keyIndex < 42; keyIndex++) { // 0 to 42
-    //     ledIndex = ledIndexForKeymapIndex(keyIndex);
-
-    //     if (ledIndex >= led_min && ledIndex <= led_max) {
-    //         r = pgm_read_byte(&ledmap[layerNum][keyIndex][0]);
-    //         g = pgm_read_byte(&ledmap[layerNum][keyIndex][1]);
-    //         b = pgm_read_byte(&ledmap[layerNum][keyIndex][2]);
-
-    //         if (!r && !g && !b) {
-    //             RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, 0, 0, 0);
-    //         } else {
-    //             RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, r, g, b);
-    //         }
-    //     }
-    // }
-    // my_set_led(_NUM, 41, led_min, led_max);
-
-    my_set_led(_NAV, 37, led_min, led_max);
-    if (is_layer_locked(_NUM)) {
-            RGB_MATRIX_INDICATOR_SET_COLOR(ledIndexForKeymapIndex(39), 255, 0, 0);
+    // Dynamic QK_LLCK indicator based on layer lock status
+    uint8_t qk_llck_led_index = find_led_index_for_keycode(QK_LLCK);
+    
+    if (qk_llck_led_index != NO_LED) {
+        if (is_layer_locked(_NUM)) {
+            // _NUM => red
+            RGB_MATRIX_INDICATOR_SET_COLOR(qk_llck_led_index, 255, 0, 0);
+        } else if (is_layer_locked(_FUNC)) {
+            // _FUNC => green
+            RGB_MATRIX_INDICATOR_SET_COLOR(qk_llck_led_index, 0, 255, 0);
+        } else if (is_layer_locked(_NAV)) {
+            // _NAV => blue
+            RGB_MATRIX_INDICATOR_SET_COLOR(qk_llck_led_index, 0, 0, 255);
+        } else if (is_layer_locked(_SYM)) {
+            // _SYM => purple
+            RGB_MATRIX_INDICATOR_SET_COLOR(qk_llck_led_index, 255, 0, 255);
         } else {
-            RGB_MATRIX_INDICATOR_SET_COLOR(ledIndexForKeymapIndex(39), 0, 0, 0);
+            // Turn off QK_LLCK indicator when no layers are locked
+            RGB_MATRIX_INDICATOR_SET_COLOR(qk_llck_led_index, 0, 0, 0);
         }
-    // my_set_led(_SYM, 40, led_min, led_max);
-    // my_set_led(_NAV, 36, led_min, led_max);
-    // my_set_led(_FUNC, 41, led_min, led_max);
+    }
 
-    // uint32_t now = timer_read();
-    // RGB_MATRIX_INDICATOR_SET_COLOR(ledIndexForKeymapIndex(current_led), 0, 0, 0);
-    // if (now - last_update_time >= 1000) {
-    //     last_update_time = now;
-    //     current_led = (current_led + 1) % 42;
-    // }
-    // RGB_MATRIX_INDICATOR_SET_COLOR(ledIndexForKeymapIndex(current_led), 255, 0, 0);
-
+    // Draw other indicators from the indicators array
+    draw_indicators(led_min, led_max);
     return false;
 }
 

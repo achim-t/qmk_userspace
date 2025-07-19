@@ -1,0 +1,6 @@
+{
+    "modules": [
+        "elpekenin/indicators",
+        "qmk/hello_world"
+    ]
+}

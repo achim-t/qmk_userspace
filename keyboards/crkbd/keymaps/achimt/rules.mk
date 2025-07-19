@@ -17,5 +17,6 @@ CAPS_WORD_ENABLE = yes
 AUTO_SHIFT_ENABLE = no
 REPEAT_KEY_ENABLE = yes
 LAYER_LOCK_ENABLE = yes
+INDICATOR_LIGHTS  = yes
 
 SRC += features/flow.c 
