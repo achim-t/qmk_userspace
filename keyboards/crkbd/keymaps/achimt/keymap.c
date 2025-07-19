@@ -24,27 +24,6 @@ enum custom_layers {
   _SUDOKU,
 };
 
-// For _QWERTY layer
-#define OSM_CTL  OSM(MOD_LCTL)
-#define OSM_AGR  OSM(MOD_RALT)
-#define OSM_SFT  OSM(MOD_LSFT) 
-#define OSM_ALT  OSM(MOD_LALT) 
-#define OSM_GUI  OSM(MOD_LGUI) 
-
-// For _NAV layer
-#define CTL_ESC  LCTL_T(KC_ESC)
-
-#ifdef RGB_MATRIX_ENABLE
-    #define ___off___	{0,0,0}
-    #define MG__WHITE	{255,255,255}
-    #define	MG____RED	{255,0,0}
-    #define MG__GREEN	{32,159,33}
-    #define MG___BLUE	{0,181,213}
-    #define MG_YELLOW	{255,208,0}
-    #define MG_ORANGE	{255,85,0}
-    #define MG___PINK	{208,0,255}
-    #define MG_PURPLE	{50,0,232}
-#endif
 
 const uint16_t flow_config[FLOW_COUNT][2] = {
     {MO(_NAV), KC_LALT},
@@ -173,8 +152,6 @@ bool caps_word_press_user(uint16_t keycode) {
     }
 }
 
-    // static uint8_t current_led = 0;
-    // static uint32_t last_update_time = 0;
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (!is_keyboard_master()) {
@@ -245,40 +222,6 @@ bool oled_task_user(void) {
 #endif // OLED_ENABLE
 
 #ifdef RGB_MATRIX_ENABLE
-
-// const uint8_t PROGMEM ledmap[][42][3] = {
-// /* Starts at layer 1; we don't apply lights to Base (layer 0). */
-// [_NAV] = {
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// 								 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-// 			},
-// [_NUM] = {
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// 						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-// 			},
-// [_FUNC] = {
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// 						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-// 			},
-// [_SYM] = {
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// ___off___, ___off___, ___off___, ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// 						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-// 			},
-// [_SUDOKU] = {
-// ___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, ___off___, MG__WHITE, ___off___, ___off___, ___off___,
-// ___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, MG__WHITE, MG__WHITE, MG__WHITE, ___off___, ___off___,
-// ___off___, ___off___, MG____RED, MG____RED, MG____RED, ___off___, 				___off___, ___off___, ___off___, ___off___, ___off___, ___off___,
-// 						   		 ___off___, ___off___, ___off___, 				___off___, ___off___, ___off___
-// 			},
-// };
 
 extern bool g_suspend_state;
 extern rgb_config_t rgb_matrix_config;
@@ -374,16 +317,6 @@ uint8_t find_led_index_for_keycode(uint16_t keycode) {
     return NO_LED;
 }
 
-void my_set_led(uint8_t layer, uint8_t keyIndex, uint8_t led_min, uint8_t led_max) {
-        uint8_t ledIndex = ledIndexForKeymapIndex(keyIndex);
-    if (ledIndex >= led_min && ledIndex <= led_max) {
-        if (is_layer_locked(layer)) {
-            RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, 255, 0, 0);
-        } else {
-            RGB_MATRIX_INDICATOR_SET_COLOR(ledIndex, 0, 0, 0);
-        }
-    }
-}
 #        include "elpekenin/indicators.h"
 const indicator_t PROGMEM indicators[] = {
     // LAYER_INDICATOR(_SUDOKU, RGB_RED),
@@ -401,7 +334,6 @@ const indicator_t PROGMEM indicators[] = {
     // Dynamic indicators need to be handled in rgb_matrix_indicators_advanced_user
  };
 
- // static uint32_t last_update_time = 0;
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     // Dynamic QK_LLCK indicator based on layer lock status
     uint8_t qk_llck_led_index = find_led_index_for_keycode(QK_LLCK);
