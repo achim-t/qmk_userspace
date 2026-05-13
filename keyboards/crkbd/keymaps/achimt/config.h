@@ -26,8 +26,9 @@ This is the C configuration file for the keymap
 //#define TAPPING_FORCE_HOLD
 
 // Customized by markstos
-// #define TAPPING_TERM 300
+#define TAPPING_TERM 500  // Increased from 300 to 500ms for more relaxed tap dance timing
 #define QUICK_TAP_TERM 150
+#define HOLD_ON_OTHER_KEY_PRESS
 //#define TAPPING_TERM_PER_KEY
 // used for Tapping Term on thumb keys
 //#define TAPPING_TERM_THUMB 125
@@ -54,7 +55,6 @@ This is the C configuration file for the keymap
 // I want a relatively low timeout, so if I accidentally type "Shift", I can pause just briefly and move on.
 #define ONESHOT_TAP_TOGGLE 3  /* Tapping this number of times holds the key until tapped once again. */
 #define ONESHOT_TIMEOUT 2000  /* Time (in ms) before the one shot key is released */
-#define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
 //#define NO_AUTO_SHIFT_SPECIAL
 //#define NO_AUTO_SHIFT_NUMERIC 
 

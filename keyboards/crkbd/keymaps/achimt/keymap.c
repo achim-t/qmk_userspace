@@ -40,25 +40,25 @@ const uint16_t flow_layers_config[FLOW_LAYERS_COUNT][2] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_split_3x6_3_ex2(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  CM_HELO,  KC_2,     DE_Z,    KC_U,    KC_I,    KC_O,    KC_P, DE_UDIA,
+       KC_ESC,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  CW_TOGG, KC_PSCR,   DE_Z,    KC_U,    KC_I,    KC_O,    KC_P, DE_UDIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       KC_TAB,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_3,  KC_4,      KC_H,    KC_J,    KC_K,    KC_L, DE_ODIA, DE_ADIA,
+       KC_TAB,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, _______,_______,      KC_H,    KC_J,    KC_K,    KC_L, DE_ODIA, DE_ADIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LALT,    DE_Y,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_N,    KC_M, KC_COMM,  KC_DOT, DE_MINS,   DE_SS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         MO(_NUM),MO(_NAV), KC_LSFT,     KC_SPC,LT(_SYM,KC_BSPC),MO(_FUNC)
+                                         MO(_NUM),MO(_NAV), OSM(MOD_LSFT),     KC_SPC,LT(_SYM,KC_BSPC),LT(_FUNC,KC_ENT)
                                       //`--------------------------'  `--------------------------'
   ),
 
   [_COLEMAK] = LAYOUT_split_3x6_3_ex2(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX,    KC_Q,    KC_W,    KC_F,    KC_P,    KC_B, _______,_______,     KC_J,    KC_L,    KC_U,    DE_Y, DE_ADIA, DE_ODIA,
+       KC_ESC,    KC_Q,    KC_W,    KC_F,    KC_P,    KC_B, CW_TOGG, KC_PSCR,    KC_J,    KC_L,    KC_U,    DE_Y, DE_ADIA, DE_ODIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        KC_TAB,    KC_A,    KC_R,    KC_S,    KC_T,    KC_G, _______,_______,     KC_M,    KC_N,    KC_E,    KC_I,    KC_O, DE_UDIA,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LALT,    DE_Z,    KC_X,    KC_C,    KC_D,    KC_V,                      KC_K,    KC_H, KC_COMM,  KC_DOT,   DE_SS, DE_MINS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         MO(_NUM),MO(_NAV), KC_LSFT,     KC_SPC,LT(_SYM,KC_BSPC),MO(_FUNC)
+                                         MO(_NUM),MO(_NAV), OSM(MOD_LSFT),     KC_SPC,LT(_SYM,KC_BSPC),LT(_FUNC,KC_ENT)
                                       //`--------------------------'  `--------------------------'
   ),
 
